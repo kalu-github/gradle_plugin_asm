@@ -1,16 +1,16 @@
 
-![image](https://github.com/153437803/plugin_asm_app/blob/master/image.gif )
+![image](https://github.com/153437803/plugin_asm/blob/master/image.gif )
 
 
 #### 统计耗时方法 - @TimeConsuming
 
 插桩前
 
-![image](https://github.com/153437803/plugin_asm_app/blob/master/image20210128122556.png )
+![image](https://github.com/153437803/plugin_asm/blob/master/image20210128122556.png )
 
 插桩后
 
-![image](https://github.com/153437803/plugin_asm_app/blob/master/image20210128122649.png )
+![image](https://github.com/153437803/plugin_asm/blob/master/image20210128122649.png )
 
 
 
