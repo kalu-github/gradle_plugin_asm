@@ -1,7 +1,6 @@
 package com.kalu.asmplugin.simple;
 
 import com.kalu.asmplugin.base.BaseClassVisitor;
-import com.kalu.asmplugin.base.BaseMethodVisitor;
 import com.kalu.asmplugin.fastclick.FastClickMethodVisitor;
 import com.kalu.asmplugin.impl.ImplClassVisitor;
 import com.kalu.asmplugin.timeconsuming.TimeComsumingMethodVisitor;
@@ -17,8 +16,8 @@ public class SimpleClassVisitor extends BaseClassVisitor implements ImplClassVis
 
     @Override
     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-//        System.out.println("------------------------------------------------------------");
-//        System.out.println("SimpleClassVisitor[visitMethod] => access = " + access + ", name = " + name + ", descriptor = " + descriptor + ", signature = " + signature + ", exceptions = " + exceptions);
+        System.out.println("------------------------------------------------------------");
+        System.out.println("SimpleClassVisitor[visitMethod] => name = " + name + ", descriptor = " + descriptor);
 
         // 排除
         if (null == name || name.length() == 0 || "<init>".equals(name)) {

@@ -21,4 +21,6 @@ public @interface PermissionVerification {
     int requestCode() default -1;
 
     boolean isFragment() default false;
+
+    String className() default "";
 }

@@ -43,8 +43,6 @@ public class BaseMethodVisitor extends AdviceAdapter implements ImplMethodVisito
         return super.visitAnnotation(descriptor, visible);
     }
 
-    int newLocal;
-
     protected void addTimeComsumingStart() {
 
         if (this.list.contains("Lcom/kalu/asmplugin/annotation/TimeConsuming;")) {
@@ -124,42 +122,6 @@ public class BaseMethodVisitor extends AdviceAdapter implements ImplMethodVisito
             mv.visitInsn(POP);
         }
     }
-
-    //    /**
-//     * 统计方法耗时
-//     */
-//    @Override
-//    public void visitInsn(int opcode) {
-//
-//        if (((opcode >= IRETURN && opcode <= RETURN) || opcode == ATHROW) && this.list.contains("Lcom/kalu/asmplugin/annotation/TimeConsuming;")) {
-//
-//            // 变更
-//            setChange();
-//
-//            Label l1 = new Label();
-//            mv.visitLabel(l1);
-//            mv.visitMethodInsn(INVOKESTATIC, "java/lang/System", "currentTimeMillis", "()J", false);
-//            mv.visitVarInsn(LLOAD, newLocal);
-//            mv.visitInsn(LSUB);
-//            mv.visitVarInsn(LSTORE, 3);
-//            Label l2 = new Label();
-//            mv.visitLabel(l2);
-//            mv.visitLdcInsn(className);
-//            mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
-//            mv.visitInsn(DUP);
-//            mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
-//            mv.visitLdcInsn(methodName + " => time = ");
-//            mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
-//            mv.visitVarInsn(LLOAD, 3);
-//            mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(J)Ljava/lang/StringBuilder;", false);
-//            mv.visitLdcInsn("ms");
-//            mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
-//            mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
-//            mv.visitMethodInsn(INVOKESTATIC, "android/util/Log", "e", "(Ljava/lang/String;Ljava/lang/String;)I", false);
-//        }
-//
-//        super.visitInsn(opcode);
-//    }
 
     //////////////////////////////////////////////////////////////////////////////////
 
