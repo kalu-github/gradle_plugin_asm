@@ -1,0 +1,8 @@
+# Project exclude paths
+/.gradle/
+/app/build/
+/app/build/intermediates/javac/debug/classes/
+/plugin_annotation/build/
+/plugin_annotation/build/classes/java/main/
+/plugin_asm/build/
+/.idea

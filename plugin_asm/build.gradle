@@ -1,0 +1,45 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+dependencies {
+    implementation 'com.android.tools.build:transform-api:1.5.0'
+    implementation 'com.android.tools.build:gradle:4.1.1'
+    implementation gradleApi()
+    implementation localGroovy()
+
+    implementation 'org.ow2.asm:asm:8.0.1'
+    implementation 'org.ow2.asm:asm-util:8.0.1'
+    implementation 'org.ow2.asm:asm-commons:8.0.1'
+}
+
+// 设置源文件路径
+sourceSets {
+    main {
+        groovy {
+            srcDir 'src/main/groovy'
+            srcDir 'src/main/java'
+        }
+
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    google()
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            //设置插件的GAV参数
+            pom.groupId = 'com.kalu.asmplugin'
+            pom.artifactId = 'asm'
+            pom.version = "1.0.0"
+            //文件发布到下面目录
+            repository(url: uri('../repo'))
+        }
+    }
+}

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/holo_blue_bright"
+        android:gravity="center"
+        android:onClick="onClickHello"
+        android:text="onClickHello" />
+
+    <TextView
+        android:id="@+id/fastclick"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/holo_blue_bright"
+        android:gravity="center"
+        android:text="fastclick" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/holo_blue_bright"
+        android:gravity="center"
+        android:onClick="onClickTime"
+        android:text="onClickTime" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/holo_blue_bright"
+        android:gravity="center"
+        android:text="req1001" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/holo_blue_bright"
+        android:gravity="center"
+        android:text="req1002" />
+
+
+</LinearLayout>
