@@ -1,5 +1,13 @@
 
-![image](https://github.com/153437803/plugin_asm_app/blob/master/device.gif )
+![image](https://github.com/153437803/plugin_asm_app/blob/master/image.gif )
+
+
+#### @TimeConsuming-统计耗时方法
+插桩前
+![image](https://github.com/153437803/plugin_asm_app/blob/master/image20210128122556.png )
+插桩后
+![image](https://github.com/153437803/plugin_asm_app/blob/master/image20210128122649.png )
+
 
 #### ASM插桩监控
 ```
