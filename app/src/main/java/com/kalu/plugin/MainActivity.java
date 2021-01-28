@@ -60,6 +60,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @FastClick(time = 1200)
+    public void onClickFast(@NonNull View view) {
+        Toast.makeText(view.getContext(), "onClickFast", Toast.LENGTH_SHORT).show();
+    }
+
+    @FastClick(time = 1200)
     @TimeConsuming
     public void onClickHello(@NonNull View view) {
         Toast.makeText(view.getContext(), "onHello", Toast.LENGTH_SHORT).show();

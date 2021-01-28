@@ -2,7 +2,7 @@
 ![image](https://github.com/153437803/plugin_asm/blob/master/image.gif )
 
 
-#### 1.统计耗时方法 - @TimeConsuming
+#### 1. 统计耗时方法 - @TimeConsuming
 
 插桩前
 
@@ -12,6 +12,18 @@
 
 ![image](https://github.com/153437803/plugin_asm/blob/master/image20210128122649.png )
 
+
+#### 2. 拦截快速点击 - @TimeConsuming
+
+插桩前
+
+![image](https://github.com/153437803/plugin_asm/blob/master/image20210128124102.png )
+
+插桩后
+
+![image](https://github.com/153437803/plugin_asm/blob/master/image20210128124250.png )
+![image](https://github.com/153437803/plugin_asm/blob/master/image20210128124319.png )
+![image](https://github.com/153437803/plugin_asm/blob/master/image20210128124338.png )
 
 
 #### ASM插桩监控
