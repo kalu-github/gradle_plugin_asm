@@ -1,16 +1,21 @@
 package com.kalu.plugin;
 
+import android.Manifest;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.kalu.asmplugin.annotation.FastClick;
+import com.kalu.asmplugin.annotation.PermissionVerification;
 import com.kalu.asmplugin.annotation.TimeConsuming;
 
+@Keep
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -18,36 +23,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // request1001
+        findViewById(R.id.request1001).setOnClickListener(new View.OnClickListener() {
 
-//        findViewById(R.id.fastclick).setOnClickListener(new View.OnClickListener() {
-//            @FastClick(time = 1100)
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(v.getContext(), "onHello", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+            @Override
+            public void onClick(View v) {
 
-//        // req1001
-//        findViewById(R.id.req1001).setOnClickListener(new View.OnClickListener() {
-//
-//            @FastClick(value = 1001)
-//            @Override
-//            public void onClick(View v) {
-//
-//                permissionVerificationRequest1001(MainActivity.this, false, false);
-//            }
-//        });
-//
-//        // req1002
-//        findViewById(R.id.req1002).setOnClickListener(new View.OnClickListener() {
-//
-//            @FastClick(value = 1002)
-//            @Override
-//            public void onClick(View v) {
-//
-//                permissionVerificationRequest1002(MainActivity.this, false, false);
-//            }
-//        });
+                onPermissionRequestMain(MainActivity.this, false, false);
+            }
+        });
     }
 
     @TimeConsuming
@@ -70,33 +54,9 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(view.getContext(), "onHello", Toast.LENGTH_SHORT).show();
     }
 
-//    @PermissionVerification(requestPermissions = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode = 1001)
-//    public void permissionVerificationRequest1001(@NonNull Activity activity, @NonNull boolean isCallback, @NonNull boolean isPass) {
-//
-//        // succ
-//        if (isCallback && isPass) {
-//            Toast.makeText(getApplicationContext(), "权限获取成功", Toast.LENGTH_SHORT).show();
-//        }
-//        // fail
-//        else {
-//            Toast.makeText(getApplicationContext(), "权限获取失败", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-//
-//    @PermissionVerification(requestPermissions = {Manifest.permission.CAMERA}, requestCode = 1002)
-//    public void permissionVerificationRequest1002(@NonNull Activity activity, @NonNull boolean isCallback, @NonNull boolean isPass) {
-//
-//        // succ
-//        if (isCallback && isPass) {
-//            Toast.makeText(getApplicationContext(), "权限获取成功", Toast.LENGTH_SHORT).show();
-//        }
-//        // fail
-//        else {
-//            Toast.makeText(getApplicationContext(), "权限获取失败", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-//
-//    public void permissionVerificationRequest1(@NonNull Activity activity, @NonNull Integer code) {
-//        Toast.makeText(getApplicationContext(), code + "", Toast.LENGTH_SHORT).show();
-//    }
+    @PermissionVerification(requestPermissions = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode = 1001, callName = "com/kalu/plugin/MainActivity")
+    public void onPermissionRequestMain(@NonNull Activity activity, @NonNull boolean isCall, @NonNull boolean isPass) {
+
+        Toast.makeText(getApplicationContext(), isPass ? "request1001成功" : "request1001失败", Toast.LENGTH_SHORT).show();
+    }
 }

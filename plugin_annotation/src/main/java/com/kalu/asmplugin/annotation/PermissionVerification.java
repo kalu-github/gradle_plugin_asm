@@ -22,5 +22,5 @@ public @interface PermissionVerification {
 
     boolean isFragment() default false;
 
-    String className() default "";
+    String callName() default "";
 }

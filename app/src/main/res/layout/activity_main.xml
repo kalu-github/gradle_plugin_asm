@@ -34,20 +34,31 @@
         android:text="onClickTime" />
 
     <TextView
+        android:id="@+id/request1001"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
         android:background="@android:color/holo_blue_bright"
         android:gravity="center"
-        android:text="req1001" />
+        android:text="request1001" />
 
     <TextView
+        android:id="@+id/request1002"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
         android:background="@android:color/holo_blue_bright"
         android:gravity="center"
-        android:text="req1002" />
+        android:text="request1002" />
+
+    <TextView
+        android:id="@+id/request1003"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/holo_blue_bright"
+        android:gravity="center"
+        android:text="request1003" />
 
 
 </LinearLayout>

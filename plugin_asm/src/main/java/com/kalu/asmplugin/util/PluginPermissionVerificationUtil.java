@@ -4,10 +4,9 @@ import org.gradle.internal.impldep.org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +16,7 @@ import static groovyjarjarasm.asm.Opcodes.ALOAD;
 import static groovyjarjarasm.asm.Opcodes.ILOAD;
 import static groovyjarjarasm.asm.Opcodes.INVOKESPECIAL;
 import static groovyjarjarasm.asm.Opcodes.ISTORE;
-import static groovyjarjarasm.asm.Opcodes.RETURN;
+import static org.objectweb.asm.Opcodes.ACONST_NULL;
 import static org.objectweb.asm.Opcodes.ARRAYLENGTH;
 import static org.objectweb.asm.Opcodes.DUP;
 import static org.objectweb.asm.Opcodes.GOTO;
@@ -25,11 +24,14 @@ import static org.objectweb.asm.Opcodes.IALOAD;
 import static org.objectweb.asm.Opcodes.ICONST_0;
 import static org.objectweb.asm.Opcodes.ICONST_1;
 import static org.objectweb.asm.Opcodes.IFEQ;
+import static org.objectweb.asm.Opcodes.IFNE;
+import static org.objectweb.asm.Opcodes.IF_ACMPEQ;
 import static org.objectweb.asm.Opcodes.IF_ICMPGE;
 import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
 import static org.objectweb.asm.Opcodes.NEW;
 import static org.objectweb.asm.Opcodes.POP;
+import static org.objectweb.asm.Opcodes.RETURN;
 
 /**
  * description: 运行时权限
@@ -37,148 +39,137 @@ import static org.objectweb.asm.Opcodes.POP;
  */
 public class PluginPermissionVerificationUtil {
 
-    public static void createOnRequestPermissionsResult(@NotNull ClassVisitor classWriter, @NotNull HashMap<Integer, String> mMethodMap, @NotNull String className, @NotNull String superName) {
+    public static void createOnRequestPermissionsResult(ClassVisitor classWriter, @NotNull HashMap<Integer, String> mMethodMap, @NotNull String className, @NotNull String superName) {
 
         if (null == mMethodMap || mMethodMap.size() == 0)
             return;
 
-        System.out.println("createRequestPermissionsResultMethodMultiple methodMap.size=" + mMethodMap.size());
-        List<Integer> mMethodList = new ArrayList<>();
-        for (Map.Entry<Integer, String> i : mMethodMap.entrySet()) {
-            mMethodList.add(i.getKey());
-        }
-        mMethodList.sort(new Comparator<Integer>() {
-            @Override
-            public int compare(Integer integer, Integer t1) {
-                if (integer > t1) {
-                    return 1;
-                } else if (integer < t1) {
-                    return -1;
-                }
-                return 0;
-            }
-        });
-        MethodVisitor mv = classWriter.visitMethod(ACC_PUBLIC, "onRequestPermissionsResult", "(I[Ljava/lang/String;[I)V", null, null);
-        mv.visitCode();
-        Label l0 = new Label();
-        mv.visitLabel(l0);
+        MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "onRequestPermissionsResult", "(I[Ljava/lang/String;[I)V", null, null);
+        methodVisitor.visitCode();
 
-        mv.visitVarInsn(ALOAD, 0);
-        mv.visitVarInsn(ILOAD, 1);
-        mv.visitVarInsn(ALOAD, 2);
-        mv.visitVarInsn(ALOAD, 3);
-        mv.visitMethodInsn(INVOKESPECIAL, superName, "onRequestPermissionsResult", "(I[Ljava/lang/String;[I)V", false);
+        Label start = new Label();
+        methodVisitor.visitLabel(start);
 
-        Label l1 = new Label();
-        mv.visitLabel(l1);
+        methodVisitor.visitVarInsn(ALOAD, 0);
+        methodVisitor.visitVarInsn(ILOAD, 1);
+        methodVisitor.visitVarInsn(ALOAD, 2);
+        methodVisitor.visitVarInsn(ALOAD, 3);
+        methodVisitor.visitMethodInsn(INVOKESPECIAL, superName, "onRequestPermissionsResult", "(I[Ljava/lang/String;[I)V", false);
 
-        createResult(mv);
+        createPass(methodVisitor);
 
-        createCallback(mv, mMethodMap, mMethodList, className, superName);
+        createCallback(methodVisitor, mMethodMap, className, superName);
 
-        mv.visitInsn(RETURN);
-        Label l9 = new Label();
-        mv.visitLabel(l9);
-        mv.visitLocalVariable("this", "L" + className + ";", null, l0, l9, 0);
-        mv.visitLocalVariable("requestCode", "I", null, l0, l9, 1);
-        mv.visitLocalVariable("permissions", "[Ljava/lang/String;", null, l0, l9, 2);
-        mv.visitLocalVariable("grantResults", "[I", null, l0, l9, 3);
-        mv.visitMaxs(4, 4);
-        mv.visitEnd();
+        methodVisitor.visitInsn(RETURN);
+
+        Label end = new Label();
+        methodVisitor.visitLabel(end);
+
+        methodVisitor.visitLocalVariable("this", "L" + className + ";", null, start, end, 0);
+        methodVisitor.visitLocalVariable("requestCode", "I", null, start, end, 1);
+        methodVisitor.visitLocalVariable("permissions", "[Ljava/lang/String;", null, start, end, 2);
+        methodVisitor.visitLocalVariable("grantResults", "[I", null, start, end, 3);
+
+//        methodVisitor.visitMaxs(4, 4);
+        methodVisitor.visitEnd();
     }
 
-    private static void createResult(MethodVisitor methodVisitor) {
+    private static void createPass(MethodVisitor methodVisitor) {
 
-        // boolean
         methodVisitor.visitInsn(ICONST_1);
-
-        // boolean var = false
         methodVisitor.visitVarInsn(ISTORE, 4);
-        methodVisitor.visitInsn(ICONST_0);
-
-        methodVisitor.visitVarInsn(ISTORE, 5);
+        methodVisitor.visitInsn(ACONST_NULL);
+        methodVisitor.visitVarInsn(ALOAD, 2);
         Label label0 = new Label();
-        methodVisitor.visitLabel(label0);
-        methodVisitor.visitFrame(Opcodes.F_APPEND, 2, new Object[]{Opcodes.INTEGER, Opcodes.INTEGER}, 0, null);
-        methodVisitor.visitVarInsn(ILOAD, 5);
+        methodVisitor.visitJumpInsn(IF_ACMPEQ, label0);
+        methodVisitor.visitVarInsn(ALOAD, 2);
+        methodVisitor.visitInsn(ARRAYLENGTH);
+        methodVisitor.visitJumpInsn(IFEQ, label0);
+        methodVisitor.visitInsn(ACONST_NULL);
+        methodVisitor.visitVarInsn(ALOAD, 3);
+        methodVisitor.visitJumpInsn(IF_ACMPEQ, label0);
         methodVisitor.visitVarInsn(ALOAD, 3);
         methodVisitor.visitInsn(ARRAYLENGTH);
         Label label1 = new Label();
-        methodVisitor.visitJumpInsn(IF_ICMPGE, label1);
+        methodVisitor.visitJumpInsn(IFNE, label1);
+        methodVisitor.visitLabel(label0);
+        methodVisitor.visitInsn(ICONST_0);
+        methodVisitor.visitVarInsn(ISTORE, 4);
+        Label label2 = new Label();
+        methodVisitor.visitJumpInsn(GOTO, label2);
+        methodVisitor.visitLabel(label1);
+        methodVisitor.visitInsn(ICONST_0);
+        methodVisitor.visitVarInsn(ISTORE, 5);
+        Label label3 = new Label();
+        methodVisitor.visitLabel(label3);
+        methodVisitor.visitVarInsn(ILOAD, 5);
+        methodVisitor.visitVarInsn(ALOAD, 3);
+        methodVisitor.visitInsn(ARRAYLENGTH);
+        methodVisitor.visitJumpInsn(IF_ICMPGE, label2);
         methodVisitor.visitVarInsn(ALOAD, 3);
         methodVisitor.visitVarInsn(ILOAD, 5);
         methodVisitor.visitInsn(IALOAD);
-        Label label2 = new Label();
-        methodVisitor.visitJumpInsn(IFEQ, label2);
+        Label label4 = new Label();
+        methodVisitor.visitJumpInsn(IFEQ, label4);
         methodVisitor.visitInsn(ICONST_0);
         methodVisitor.visitVarInsn(ISTORE, 4);
-        methodVisitor.visitJumpInsn(GOTO, label1);
-        methodVisitor.visitLabel(label2);
-        methodVisitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+        methodVisitor.visitJumpInsn(GOTO, label2);
+        methodVisitor.visitLabel(label4);
         methodVisitor.visitIincInsn(5, 1);
-        methodVisitor.visitJumpInsn(GOTO, label0);
-        methodVisitor.visitLabel(label1);
-        methodVisitor.visitFrame(Opcodes.F_CHOP, 1, null, 0, null);
+        methodVisitor.visitJumpInsn(GOTO, label3);
+        methodVisitor.visitLabel(label2);
+        methodVisitor.visitLdcInsn("asmpermission");
+        methodVisitor.visitTypeInsn(NEW, "java/lang/StringBuilder");
+        methodVisitor.visitInsn(DUP);
+        methodVisitor.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
+        methodVisitor.visitLdcInsn("onRequestPermissionsResult => pass = ");
+        methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
+        methodVisitor.visitVarInsn(ILOAD, 4);
+        methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Z)Ljava/lang/StringBuilder;", false);
+        methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
+        methodVisitor.visitMethodInsn(INVOKESTATIC, "android/util/Log", "d", "(Ljava/lang/String;Ljava/lang/String;)I", false);
+        methodVisitor.visitInsn(POP);
 
-        // log
-//        methodVisitor.visitLdcInsn("kalu");
-//        methodVisitor.visitTypeInsn(NEW, "java/lang/StringBuilder");
-//        methodVisitor.visitInsn(DUP);
-//        methodVisitor.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
-//        methodVisitor.visitVarInsn(ILOAD, 4);
-//        methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Z)Ljava/lang/StringBuilder;", false);
-//        methodVisitor.visitLdcInsn("");
-//        methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
-//        methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
-//        methodVisitor.visitMethodInsn(INVOKESTATIC, "android/util/Log", "e", "(Ljava/lang/String;Ljava/lang/String;)I", false);
-//        methodVisitor.visitInsn(POP);
     }
 
-    private static void createCallback(@NotNull MethodVisitor mv, @NotNull HashMap<Integer, String> mMethodMap, @NotNull List<Integer> mMethodList, @NotNull String className, @NotNull String superName) {
+    private static void createCallback(@NotNull MethodVisitor methodVisitor, @NotNull HashMap<Integer, String> map, @NotNull String className, @NotNull String superName) {
 
-        mv.visitVarInsn(ILOAD, 1);
-        Label[] labels = new Label[mMethodMap.size()];
+        List<Integer> list = new ArrayList<>();
+        for (Map.Entry<Integer, String> entry : map.entrySet()) {
+            list.add(entry.getKey());
+        }
+        Collections.sort(list);
 
-        for (int i = 0; i < labels.length; i++) {
-            Label label = new Label();
-            labels[i] = label;
-
+        Label[] labels = new Label[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            labels[i] = new Label();
         }
 
-        Label l5 = new Label();
+        methodVisitor.visitVarInsn(ILOAD, 1);
+        Label label6 = new Label();
 
-        mv.visitTableSwitchInsn(mMethodList.get(0), mMethodList.get(mMethodList.size() - 1), l5, labels);
-
+        int min = list.get(0);
+        int max = list.get(list.size() - 1);
+        methodVisitor.visitTableSwitchInsn(min, max, label6, labels);
 
         for (int i = 0; i < labels.length; i++) {
 
-            mv.visitLabel(labels[i]);
+            methodVisitor.visitLabel(labels[i]);
+            //methodVisitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+            methodVisitor.visitVarInsn(ALOAD, 0);
+            methodVisitor.visitVarInsn(ALOAD, 0);
+            methodVisitor.visitInsn(ICONST_1);
+            methodVisitor.visitVarInsn(ILOAD, 4);
+            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, className, "onPermissionRequestMain", "(Landroid/app/Activity;ZZ)V", false);
+            methodVisitor.visitInsn(RETURN);
 
-            mv.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
-            mv.visitVarInsn(ALOAD, 0);
-            mv.visitVarInsn(ALOAD, 0);
-            if (superName.contains("Fragment")) {
-                mv.visitMethodInsn(INVOKEVIRTUAL, className, "getActivity", "()Landroidx/fragment/app/FragmentActivity;", false);
-            }
-//            mv.visitVarInsn(ILOAD, 4);
-//            mv.visitMethodInsn(INVOKESTATIC, "java/lang/Integer", "valueOf", "(I)Ljava/lang/Integer;", false);
-
-            mv.visitInsn(ICONST_1);
-            mv.visitVarInsn(ILOAD, 4);
-//            mv.visitInsn(ICONST_1);
-
-            mv.visitMethodInsn(INVOKEVIRTUAL, className, mMethodMap.get(mMethodList.get(i)), "(Landroid/app/Activity;ZZ)V", false);
-
-
-            Label l7 = new Label();
-            mv.visitLabel(l7);
-
-            mv.visitJumpInsn(GOTO, l5);
+//            Label label7 = new Label();
+//            methodVisitor.visitLabel(label7);
+//            methodVisitor.visitJumpInsn(GOTO, label6);
         }
 
-
-        mv.visitLabel(l5);
-        mv.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+        methodVisitor.visitLabel(label6);
+        //methodVisitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
 
     }
 }

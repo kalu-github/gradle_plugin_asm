@@ -24,6 +24,8 @@ public class BaseClassVisitor extends ClassVisitor implements ImplClassVisitor {
     private boolean isInterface;
     private boolean isChange;
 
+//    boolean containsPermissionVerification = false;
+
     public BaseClassVisitor(ClassVisitor classVisitor) {
         super(org.objectweb.asm.Opcodes.ASM4, classVisitor);
     }
