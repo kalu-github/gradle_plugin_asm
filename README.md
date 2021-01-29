@@ -38,11 +38,10 @@
 
 插桩前
 
-![image](https://github.com/153437803/gradle_plugin_asm/blob/master/image20210128124102.png )
+![image](https://github.com/153437803/gradle_plugin_asm/blob/master/image20210129125705.png )
 
 插桩后
 
-![image](https://github.com/153437803/gradle_plugin_asm/blob/master/image20210129125705.png )
 ![image](https://github.com/153437803/gradle_plugin_asm/blob/master/image20210129125733.png )
 ![image](https://github.com/153437803/gradle_plugin_asm/blob/master/image20210129125802.png )
 ![image](https://github.com/153437803/gradle_plugin_asm/blob/master/image20210129125849.png )
