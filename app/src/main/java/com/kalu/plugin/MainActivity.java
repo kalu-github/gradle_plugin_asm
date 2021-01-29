@@ -54,7 +54,10 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(view.getContext(), "onHello", Toast.LENGTH_SHORT).show();
     }
 
-    @PermissionVerification(requestPermissions = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode = 1001, callName = "com/kalu/plugin/MainActivity")
+    @PermissionVerification(
+            requestPermissions = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+            requestCode = 1001,
+            callName = "com/kalu/plugin/MainActivity")
     public void onPermissionRequestMain(@NonNull Activity activity, @NonNull boolean isCall, @NonNull boolean isPass) {
 
         Toast.makeText(getApplicationContext(), isPass ? "request1001成功" : "request1001失败", Toast.LENGTH_SHORT).show();

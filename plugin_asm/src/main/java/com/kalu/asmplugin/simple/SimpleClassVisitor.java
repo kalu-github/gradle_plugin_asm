@@ -48,12 +48,11 @@ public class SimpleClassVisitor extends BaseClassVisitor implements ImplClassVis
     public void visitEnd() {
 
         if (getClassName().contains("MainActivity")) {
-            HashMap<Integer, String> mMethodMap = new HashMap<>();
-//        map.put(1002, "onPermissionRequestTest");
-            mMethodMap.put(1001, "onPermissionRequestMain");
-            mMethodMap.put(1003, "onPermissionRequestMain");
-            mMethodMap.put(1002, "onPermissionRequestMain");
-            PluginPermissionVerificationUtil.createOnRequestPermissionsResult(this, mMethodMap, getClassName(), getSuperName());
+            HashMap<Integer, String> map = new HashMap<>();
+            map.put(1001, "onPermissionRequestMain");
+            map.put(1003, "onPermissionRequestMain2");
+            map.put(1005, "onPermissionRequestMain3");
+            PluginPermissionVerificationUtil.createOnRequestPermissionsResult(this, map, getClassName(), getSuperName());
         }
         super.visitEnd();
     }

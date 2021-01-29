@@ -31,6 +31,24 @@
 
 
 #
+#### 3. 动态权限 - @PermissionVerification(
+                           requestPermissions = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                           requestCode = 1001,
+                           callName = "com/kalu/plugin/MainActivity")
+
+插桩前
+
+![image](https://github.com/153437803/gradle_plugin_asm/blob/master/image20210128124102.png )
+
+插桩后
+
+![image](https://github.com/153437803/gradle_plugin_asm/blob/master/image20210129125705.png )
+![image](https://github.com/153437803/gradle_plugin_asm/blob/master/image20210129125733.png )
+![image](https://github.com/153437803/gradle_plugin_asm/blob/master/image20210129125802.png )
+![image](https://github.com/153437803/gradle_plugin_asm/blob/master/image20210129125849.png )
+![image](https://github.com/153437803/gradle_plugin_asm/blob/master/image20210129125904.png )
+
+#
 #### Todo
 ```
 1. 检测方法耗时 - 已完成

@@ -5,10 +5,7 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static groovyjarjarasm.asm.Opcodes.ACC_PUBLIC;
@@ -27,11 +24,13 @@ import static org.objectweb.asm.Opcodes.IFEQ;
 import static org.objectweb.asm.Opcodes.IFNE;
 import static org.objectweb.asm.Opcodes.IF_ACMPEQ;
 import static org.objectweb.asm.Opcodes.IF_ICMPGE;
+import static org.objectweb.asm.Opcodes.IF_ICMPNE;
 import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
 import static org.objectweb.asm.Opcodes.NEW;
 import static org.objectweb.asm.Opcodes.POP;
 import static org.objectweb.asm.Opcodes.RETURN;
+import static org.objectweb.asm.Opcodes.SIPUSH;
 
 /**
  * description: 运行时权限
@@ -134,42 +133,21 @@ public class PluginPermissionVerificationUtil {
 
     private static void createCallback(@NotNull MethodVisitor methodVisitor, @NotNull HashMap<Integer, String> map, @NotNull String className, @NotNull String superName) {
 
-        List<Integer> list = new ArrayList<>();
         for (Map.Entry<Integer, String> entry : map.entrySet()) {
-            list.add(entry.getKey());
-        }
-        Collections.sort(list);
 
-        Label[] labels = new Label[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            labels[i] = new Label();
-        }
+            methodVisitor.visitVarInsn(ILOAD, 1);
+            methodVisitor.visitIntInsn(SIPUSH, new Integer(entry.getKey()));
 
-        methodVisitor.visitVarInsn(ILOAD, 1);
-        Label label6 = new Label();
+            Label label5 = new Label();
+            methodVisitor.visitJumpInsn(IF_ICMPNE, label5);
 
-        int min = list.get(0);
-        int max = list.get(list.size() - 1);
-        methodVisitor.visitTableSwitchInsn(min, max, label6, labels);
-
-        for (int i = 0; i < labels.length; i++) {
-
-            methodVisitor.visitLabel(labels[i]);
-            //methodVisitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
             methodVisitor.visitVarInsn(ALOAD, 0);
             methodVisitor.visitVarInsn(ALOAD, 0);
             methodVisitor.visitInsn(ICONST_1);
             methodVisitor.visitVarInsn(ILOAD, 4);
-            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, className, "onPermissionRequestMain", "(Landroid/app/Activity;ZZ)V", false);
+            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, className, entry.getValue(), "(Landroid/app/Activity;ZZ)V", false);
             methodVisitor.visitInsn(RETURN);
-
-//            Label label7 = new Label();
-//            methodVisitor.visitLabel(label7);
-//            methodVisitor.visitJumpInsn(GOTO, label6);
+            methodVisitor.visitLabel(label5);
         }
-
-        methodVisitor.visitLabel(label6);
-        //methodVisitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
-
     }
 }
