@@ -1,4 +1,13 @@
+#
+#### Todo
+```
+1. 检测方法耗时 - 已完成
+2. 拦截快速点击 - 已完成
+3. 申请动态权限 - 60%
+```
 
+
+#
 #### Demo
 
 ![image](https://github.com/153437803/gradle_plugin_asm/blob/master/image.gif )
@@ -47,13 +56,6 @@
 ![image](https://github.com/153437803/gradle_plugin_asm/blob/master/image20210129125849.png )
 ![image](https://github.com/153437803/gradle_plugin_asm/blob/master/image20210129125904.png )
 
-#
-#### Todo
-```
-1. 检测方法耗时 - 已完成
-2. 拦截快速点击 - 已完成
-3. 运行时动态权限 - 未完成
-```
 
 #
 #### 思路
