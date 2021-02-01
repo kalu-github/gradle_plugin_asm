@@ -1,5 +1,7 @@
 package com.kalu.asmplugin.util;
 
+import com.kalu.asmplugin.model.PermissionVerificationModel;
+
 import org.gradle.internal.impldep.org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
@@ -38,9 +40,18 @@ import static org.objectweb.asm.Opcodes.SIPUSH;
  */
 public class PluginPermissionVerificationUtil {
 
-    public static void createOnRequestPermissionsResult(ClassVisitor classWriter, @NotNull HashMap<Integer, String> mMethodMap, @NotNull String className, @NotNull String superName) {
+    public static void createOnRequestPermissionsResult(ClassVisitor classWriter, @NotNull HashMap<Integer, PermissionVerificationModel> map, String className, String superName) {
 
-        if (null == mMethodMap || mMethodMap.size() == 0)
+        if (null == map || map.size() == 0)
+            return;
+
+//        String className;
+//        String superName;
+//        PermissionVerificationModel next = map.values().iterator().next();
+//        className = next.getRequestCall();
+//        superName = next.getRequestSuperCall();
+
+        if (null == className || className.length() == 0 || null == superName || superName.length() == 0)
             return;
 
         MethodVisitor methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "onRequestPermissionsResult", "(I[Ljava/lang/String;[I)V", null, null);
@@ -57,7 +68,7 @@ public class PluginPermissionVerificationUtil {
 
         createPass(methodVisitor);
 
-        createCallback(methodVisitor, mMethodMap, className, superName);
+        createCallback(methodVisitor, map, className, superName);
 
         methodVisitor.visitInsn(RETURN);
 
@@ -131,9 +142,9 @@ public class PluginPermissionVerificationUtil {
 
     }
 
-    private static void createCallback(@NotNull MethodVisitor methodVisitor, @NotNull HashMap<Integer, String> map, @NotNull String className, @NotNull String superName) {
+    private static void createCallback(@NotNull MethodVisitor methodVisitor, @NotNull HashMap<Integer, PermissionVerificationModel> map, @NotNull String className, @NotNull String superName) {
 
-        for (Map.Entry<Integer, String> entry : map.entrySet()) {
+        for (Map.Entry<Integer, PermissionVerificationModel> entry : map.entrySet()) {
 
             methodVisitor.visitVarInsn(ILOAD, 1);
             methodVisitor.visitIntInsn(SIPUSH, new Integer(entry.getKey()));
@@ -145,7 +156,7 @@ public class PluginPermissionVerificationUtil {
             methodVisitor.visitVarInsn(ALOAD, 0);
             methodVisitor.visitInsn(ICONST_1);
             methodVisitor.visitVarInsn(ILOAD, 4);
-            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, className, entry.getValue(), "(Landroid/app/Activity;ZZ)V", false);
+            methodVisitor.visitMethodInsn(INVOKEVIRTUAL, className, entry.getValue().getRequestMethodName(), "(Landroid/app/Activity;ZZ)V", false);
             methodVisitor.visitInsn(RETURN);
             methodVisitor.visitLabel(label5);
         }

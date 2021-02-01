@@ -34,6 +34,28 @@ public class MainActivity extends AppCompatActivity {
                 onPermissionRequestMain(MainActivity.this, false, false);
             }
         });
+
+
+        // request1003
+        findViewById(R.id.request1002).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                onPermissionRequestNext(MainActivity.this, false, false);
+            }
+        });
+
+
+        // request1003
+        findViewById(R.id.request1003).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                onPermissionRequestTodo(MainActivity.this, false, false);
+            }
+        });
     }
 
     @TimeConsuming
@@ -59,9 +81,31 @@ public class MainActivity extends AppCompatActivity {
     @PermissionVerification(
             requestPermissions = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
             requestCode = 1001,
-            requestCall = MainActivity.class)
+            requestCall = MainActivity.class,
+            requestSuperCall = AppCompatActivity.class)
     public void onPermissionRequestMain(@NonNull Activity activity, @NonNull boolean isCall, @NonNull boolean isPass) {
 
         Toast.makeText(getApplicationContext(), isPass ? "request1001成功" : "request1001失败", Toast.LENGTH_SHORT).show();
+    }
+
+    @PermissionVerification(
+            requestPermissions = {Manifest.permission.ACCESS_NETWORK_STATE},
+            requestCode = 1002,
+            requestCall = MainActivity.class,
+            requestSuperCall = AppCompatActivity.class)
+    public void onPermissionRequestNext(@NonNull Activity activity, @NonNull boolean isCall, @NonNull boolean isPass) {
+
+        Toast.makeText(getApplicationContext(), isPass ? "request1002成功" : "request1002失败", Toast.LENGTH_SHORT).show();
+    }
+
+
+    @PermissionVerification(
+            requestPermissions = {Manifest.permission.RECORD_AUDIO},
+            requestCode = 1003,
+            requestCall = MainActivity.class,
+            requestSuperCall = AppCompatActivity.class)
+    public void onPermissionRequestTodo(@NonNull Activity activity, @NonNull boolean isCall, @NonNull boolean isPass) {
+
+        Toast.makeText(getApplicationContext(), isPass ? "request1003成功" : "request1003失败", Toast.LENGTH_SHORT).show();
     }
 }

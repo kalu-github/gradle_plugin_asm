@@ -1,6 +1,7 @@
 package com.kalu.asmplugin.base;
 
 import com.kalu.asmplugin.impl.ImplClassVisitor;
+import com.kalu.asmplugin.model.PermissionVerificationModel;
 
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
@@ -8,6 +9,8 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.TypePath;
+
+import java.util.HashMap;
 
 import static org.objectweb.asm.Opcodes.ACC_INTERFACE;
 
@@ -23,6 +26,8 @@ public class BaseClassVisitor extends ClassVisitor implements ImplClassVisitor {
     private String superName;
     private boolean isInterface;
     private boolean isChange;
+
+    private HashMap<Integer, PermissionVerificationModel> MAP_PERMISSION_VERIFICATION = new HashMap<>();
 
 //    boolean containsPermissionVerification = false;
 
@@ -172,6 +177,20 @@ public class BaseClassVisitor extends ClassVisitor implements ImplClassVisitor {
 
     public void setChange(boolean change) {
         isChange = change;
+    }
+
+    public void putRequest(int requestCode, String requestMethodName, String requestCall, String requestSuperCall) {
+
+        PermissionVerificationModel model = new PermissionVerificationModel();
+        model.setRequestCall(requestCall);
+        model.setRequestSuperCall(requestSuperCall);
+        model.setRequestMethodName(requestMethodName);
+        MAP_PERMISSION_VERIFICATION.put(requestCode, model);
+
+    }
+
+    public HashMap<Integer, PermissionVerificationModel> getRequest() {
+        return MAP_PERMISSION_VERIFICATION;
     }
 
     @Override

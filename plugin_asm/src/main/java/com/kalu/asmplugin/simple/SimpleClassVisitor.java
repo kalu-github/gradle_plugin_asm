@@ -3,8 +3,10 @@ package com.kalu.asmplugin.simple;
 import com.kalu.asmplugin.base.BaseClassVisitor;
 import com.kalu.asmplugin.fastclick.FastClickMethodVisitor;
 import com.kalu.asmplugin.impl.ImplClassVisitor;
+import com.kalu.asmplugin.model.PermissionVerificationModel;
 import com.kalu.asmplugin.permission.PermissionVerificationMethodVisitor;
 import com.kalu.asmplugin.timeconsuming.TimeComsumingMethodVisitor;
+import com.kalu.asmplugin.util.PluginLogUtil;
 import com.kalu.asmplugin.util.PluginPermissionVerificationUtil;
 
 import org.objectweb.asm.ClassVisitor;
@@ -47,13 +49,29 @@ public class SimpleClassVisitor extends BaseClassVisitor implements ImplClassVis
     @Override
     public void visitEnd() {
 
-        if (getClassName().contains("MainActivity")) {
-            HashMap<Integer, String> map = new HashMap<>();
-            map.put(1001, "onPermissionRequestMain");
-            map.put(1003, "onPermissionRequestMain2");
-            map.put(1005, "onPermissionRequestMain3");
-            PluginPermissionVerificationUtil.createOnRequestPermissionsResult(this, map, getClassName(), getSuperName());
+        HashMap<Integer, PermissionVerificationModel> request = getRequest();
+        if (null != request && request.size() > 0) {
+
+            String className;
+            String superName;
+            PermissionVerificationModel next = request.values().iterator().next();
+            className = next.getRequestCall();
+            superName = next.getRequestSuperCall();
+
+            PluginLogUtil.log("kalu => className = " + className);
+            PluginLogUtil.log("kalu => superName = " + superName);
+            PluginLogUtil.log("kalu => getClassName = " + getClassName());
+            PluginLogUtil.log("kalu => getSuperName = " + getSuperName());
+
+            PluginPermissionVerificationUtil.createOnRequestPermissionsResult(this, request, getClassName(), getSuperName());
         }
+//        if (getClassName().contains("MainActivity")) {
+//            HashMap<Integer, String> map = new HashMap<>();
+//            map.put(1001, "onPermissionRequestMain");
+//            map.put(1003, "onPermissionRequestMain2");
+//            map.put(1005, "onPermissionRequestMain3");
+//            PluginPermissionVerificationUtil.createOnRequestPermissionsResult(this, map, getClassName(), getSuperName());
+//        }
         super.visitEnd();
     }
 }

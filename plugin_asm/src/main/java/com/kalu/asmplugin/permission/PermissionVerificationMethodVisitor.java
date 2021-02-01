@@ -23,11 +23,19 @@ import java.util.List;
 public class PermissionVerificationMethodVisitor extends BaseMethodVisitor {
 
     private int requestCode = -1;
-    private String requestCall = null;
     private String[] requestPermissions = null;
+
+    private String requestCall = null;
+    private String requestSuperCall = null;
+    private String requestMethodName = null;
+
+    private BaseClassVisitor baseClassVisitor = null;
 
     public PermissionVerificationMethodVisitor(BaseClassVisitor baseClassVisitor, MethodVisitor methodVisitor, int access, String descriptor, String methodName, String className) {
         super(baseClassVisitor, methodVisitor, access, descriptor, methodName, className);
+        this.baseClassVisitor = baseClassVisitor;
+        this.requestMethodName = methodName;
+
     }
 
     @Override
@@ -52,7 +60,22 @@ public class PermissionVerificationMethodVisitor extends BaseMethodVisitor {
                 }
                 // requestCall
                 else if ("requestCall".equals(name) && null != value && value instanceof org.objectweb.asm.Type) {
-                    requestCall = value.toString();
+//                    requestCall = ((Type) value).getClassName();
+
+                    String toString = value.toString();
+                    int length = toString.length();
+                    String substring = toString.substring(1, length - 1);
+
+                    requestCall = substring;
+                }
+                // requestSuperCall
+                else if ("requestSuperCall".equals(name) && null != value && value instanceof org.objectweb.asm.Type) {
+//                    requestSuperCall = ((Type) value).getClassName();
+
+                    String toString = value.toString();
+                    int length = toString.length();
+                    String substring = toString.substring(1, length - 1);
+                    requestSuperCall = substring;
                 }
             }
 
@@ -95,6 +118,11 @@ public class PermissionVerificationMethodVisitor extends BaseMethodVisitor {
         PluginLogUtil.log("PermissionVerificationMethodVisitor[onMethodEnter] => requestPermissions = " + Arrays.toString(requestPermissions));
 
         if (requestCode != -1 && null != requestPermissions && requestPermissions.length > 0 && null != requestCall && requestCall.length() != 0 && containsDescriptor("Lcom/kalu/asmplugin/annotation/PermissionVerification;")) {
+
+            // 标记
+            if (null != baseClassVisitor) {
+                baseClassVisitor.putRequest(requestCode, requestMethodName, requestCall, requestSuperCall);
+            }
 
             // 变更
             setChange();

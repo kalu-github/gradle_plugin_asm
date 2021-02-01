@@ -63,12 +63,12 @@ public class Test extends Activity {
             }
         }
 
-        Log.d("asmpermission", "checkSelfPermission => isCall = "+isCall);
-        Log.d("asmpermission", "checkSelfPermission => isAgree = "+isAgree);
+        Log.d("asmpermission", "checkSelfPermission => isCall = " + isCall);
+        Log.d("asmpermission", "checkSelfPermission => isAgree = " + isAgree);
 
-        Log.d("asmpermission", "checkSelfPermission => isPass = "+isPass);
+        Log.d("asmpermission", "checkSelfPermission => isPass = " + isPass);
         isPass = isAgree;
-        Log.d("asmpermission", "checkSelfPermission => isPass = "+isPass);
+        Log.d("asmpermission", "checkSelfPermission => isPass = " + isPass);
 
 
         if (!isCall && !isAgree) {
