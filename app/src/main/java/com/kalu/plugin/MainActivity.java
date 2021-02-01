@@ -18,6 +18,8 @@ import com.kalu.asmplugin.annotation.TimeConsuming;
 @Keep
 public class MainActivity extends AppCompatActivity {
 
+    public static final String TAG = MainActivity.class.getName();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     @PermissionVerification(
             requestPermissions = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
             requestCode = 1001,
-            callName = "com/kalu/plugin/MainActivity")
+            requestCall = MainActivity.class)
     public void onPermissionRequestMain(@NonNull Activity activity, @NonNull boolean isCall, @NonNull boolean isPass) {
 
         Toast.makeText(getApplicationContext(), isPass ? "request1001成功" : "request1001失败", Toast.LENGTH_SHORT).show();

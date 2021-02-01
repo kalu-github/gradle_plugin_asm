@@ -22,10 +22,8 @@ import java.util.List;
  */
 public class PermissionVerificationMethodVisitor extends BaseMethodVisitor {
 
-    private String callName = null;
-    private boolean isFragment = false;
-
     private int requestCode = -1;
+    private String requestCall = null;
     private String[] requestPermissions = null;
 
     public PermissionVerificationMethodVisitor(BaseClassVisitor baseClassVisitor, MethodVisitor methodVisitor, int access, String descriptor, String methodName, String className) {
@@ -49,16 +47,12 @@ public class PermissionVerificationMethodVisitor extends BaseMethodVisitor {
                 PluginLogUtil.log("PermissionVerificationMethodVisitor[BaseAnnotationVisitor-visit] => name = " + name + ", value = " + value);
 
                 // requestCode
-                if ("requestCode".equals(name) && value instanceof Integer) {
+                if ("requestCode".equals(name) && null != value && value instanceof Integer) {
                     requestCode = (int) value;
                 }
-                // isFragment
-                else if ("isFragment".equals(name) && value instanceof Boolean) {
-                    isFragment = (boolean) value;
-                }
-                // callName
-                else if ("callName".equals(name) && value instanceof String) {
-                    callName = (String) value;
+                // requestCall
+                else if ("requestCall".equals(name) && null != value && value instanceof org.objectweb.asm.Type) {
+                    requestCall = value.toString();
                 }
             }
 
@@ -97,16 +91,14 @@ public class PermissionVerificationMethodVisitor extends BaseMethodVisitor {
         super.onMethodEnter();
 
         PluginLogUtil.log("PermissionVerificationMethodVisitor[onMethodEnter] => requestCode = " + requestCode);
-        PluginLogUtil.log("PermissionVerificationMethodVisitor[onMethodEnter] => isFragment = " + isFragment);
-        PluginLogUtil.log("PermissionVerificationMethodVisitor[onMethodEnter] => callName = " + callName);
+        PluginLogUtil.log("PermissionVerificationMethodVisitor[onMethodEnter] => requestCall = " + requestCall);
         PluginLogUtil.log("PermissionVerificationMethodVisitor[onMethodEnter] => requestPermissions = " + Arrays.toString(requestPermissions));
 
-        if (requestCode != -1 && null != requestPermissions && requestPermissions.length > 0 && null != callName && callName.length() != 0 && containsDescriptor("Lcom/kalu/asmplugin/annotation/PermissionVerification;")) {
+        if (requestCode != -1 && null != requestPermissions && requestPermissions.length > 0 && null != requestCall && requestCall.length() != 0 && containsDescriptor("Lcom/kalu/asmplugin/annotation/PermissionVerification;")) {
 
             // 变更
             setChange();
 
-            mv.visitCode();
             mv.visitCode();
             mv.visitInsn(ICONST_2);
             mv.visitTypeInsn(ANEWARRAY, "java/lang/String");
@@ -217,10 +209,23 @@ public class PermissionVerificationMethodVisitor extends BaseMethodVisitor {
             mv.visitJumpInsn(IFNE, label3);
             mv.visitVarInsn(ILOAD, 8);
             mv.visitJumpInsn(IFNE, label3);
+
             mv.visitVarInsn(ALOAD, 1);
+//            // fragment
+//            if (requestCall.contains("Fragment")) {
+//                mv.visitMethodInsn(INVOKEVIRTUAL, requestCall, "getActivity", "()Landroidx/fragment/app/FragmentActivity;", false);
+//            }
+
             mv.visitVarInsn(ALOAD, 7);
-            mv.visitIntInsn(SIPUSH, 1001);
-            mv.visitMethodInsn(INVOKESTATIC, "androidx/core/app/ActivityCompat", "requestPermissions", "(Landroid/app/Activity;[Ljava/lang/String;I)V", false);
+            mv.visitIntInsn(SIPUSH, requestCode);
+            // fragment
+            if (requestCall.contains("Fragment")) {
+                mv.visitMethodInsn(INVOKEVIRTUAL, requestCall, "requestPermissions", "([Ljava/lang/String;I)V", false);
+            }
+            // activity
+            else {
+                mv.visitMethodInsn(INVOKESTATIC, "androidx/core/app/ActivityCompat", "requestPermissions", "(Landroid/app/Activity;[Ljava/lang/String;I)V", false);
+            }
             mv.visitInsn(RETURN);
             mv.visitLabel(label3);
         }

@@ -4,6 +4,8 @@ import com.kalu.asmplugin.impl.ImplMethodVisitor;
 
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
 
 import java.util.ArrayList;
@@ -17,6 +19,9 @@ public class BaseMethodVisitor extends AdviceAdapter implements ImplMethodVisito
     private String className;
     private String methodName;
 
+    private boolean isStaticMethod;
+    private Type[] argumentArrays;
+
     private BaseClassVisitor baseClassVisitor;
     private ArrayList<String> list = new ArrayList<>();
 
@@ -25,6 +30,9 @@ public class BaseMethodVisitor extends AdviceAdapter implements ImplMethodVisito
         this.baseClassVisitor = baseClassVisitor;
         this.methodName = methodName;
         this.className = className;
+
+        isStaticMethod = ((access & Opcodes.ACC_STATIC) != 0);
+        argumentArrays = Type.getArgumentTypes(descriptor);
     }
 
     /**
