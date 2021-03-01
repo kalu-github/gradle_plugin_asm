@@ -40,10 +40,7 @@
 
 
 #
-#### 3. 动态权限 - @PermissionVerification(
-                           requestPermissions = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                           requestCode = 1001,
-                           callName = "com/kalu/plugin/MainActivity")
+#### 3. 动态权限 - @PermissionVerification
 
 插桩前
 
